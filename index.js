@@ -1,0 +1,38 @@
+
+const bodyParser = require('body-parser');
+
+global.formData = require('./db')(function call(err, data) {
+  if(err) console.log(err);
+  global.formData = data;
+})
+
+
+
+
+
+  const express = require('express')
+  const app = express()
+  const port = process.env.PORT || 5000
+  
+  app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+  
+  app.use((req, res, next) => { 
+    res.setHeader("Access-Control-Allow-Origin", "https://keeper.netlify.app/");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
+    next();
+  });
+  app.use(express.json())
+  
+  app.get('/', (req, res) => {
+    res.send('Hello World!')
+  })
+  
+  app.use('/api/auth', require('./Routes/Auth'));
+  
+  app.listen(port, () => {
+    console.log(`Example app listening on http://localhost:${port}`)
+  })
