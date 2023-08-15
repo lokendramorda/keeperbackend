@@ -8,8 +8,6 @@ global.formData = require('./db')(function call(err, data) {
 
 
 
-
-
   const express = require('express')
   const app = express()
   const port = process.env.PORT || 5000
@@ -18,7 +16,7 @@ global.formData = require('./db')(function call(err, data) {
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
   
   app.use((req, res, next) => { 
-    res.setHeader("Access-Control-Allow-Origin", "https://keeper.netlify.app/");
+    res.setHeader("Access-Control-Allow-Origin", "https://keeperhere.netlify.app");
     res.header(
       "Access-Control-Allow-Headers",
       "Origin, X-Requested-With, Content-Type, Accept"

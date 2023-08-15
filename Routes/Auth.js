@@ -130,29 +130,35 @@ router.post('/upload', async (req, res) => {
   }
 });
 
-  router.get('/preview', async (req, res) => {
-    try {
-      const { userEmail, formmName } = req.query;
-  
-     
-      if (!userEmail || !formmName) {
-        return res.status(400).json({ error: 'userEmail and formName are required query parameters' });
-      }
-  
-      const mainData = await MainData.findOne({
+router.get('/preview', async (req, res) => {
+  try {
+    const { userEmail, formmName, formId } = req.query;
+
+    if ((!userEmail || !formmName) && !formId) {
+      return res.status(400).json({ error: 'Either userEmail and formName or formId is required query parameter' });
+    }
+
+    let mainData = null;
+
+    if (userEmail && formmName) {
+      mainData = await MainData.findOne({
         userEmail,
         'simpleQuizData.formName': formmName,
       });
-  
-      if (!mainData) {
-        return res.status(404).json({ error: 'Form not found' });
-      }
-  
-      res.json(mainData);
-    } catch (error) {
-      res.status(500).json({ error: 'Error fetching form data' });
+    } else if (formId) {
+      mainData = await MainData.findById(formId);
     }
-  });
+
+    if (!mainData) {
+      return res.status(404).json({ error: 'Form not found' });
+    }
+
+    res.json(mainData);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching form data' });
+  }
+});
+
 
   router.get("/formlist", async (req, res) => {
     try {
